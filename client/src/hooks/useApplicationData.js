@@ -49,15 +49,16 @@ const reducer = (state, action) => {
 const useApplicationData = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
+  // olde endpoint "http://localhost:8001..."
   useEffect(() => {
     // Fetch photos data
-    fetch('http://localhost:8001/api/photos')
+    fetch('https://photolabs-deployed.onrender.com/api/photos')
       .then(response => response.json())
       .then(data => dispatch({ type: 'SET_PHOTOS', payload: data }))
       .catch(error => console.error('Error fetching photos:', error));
 
     // Fetch topics data
-    fetch('http://localhost:8001/api/topics')
+    fetch('https://photolabs-deployed.onrender.com/api/topics')
       .then(response => response.json())
       .then(data => dispatch({ type: 'SET_TOPICS', payload: data }))
       .catch(error => console.error('Error fetching topics:', error));
@@ -66,7 +67,7 @@ const useApplicationData = () => {
   
   // Function to fetch photos by topic ID
   const getPhotosByTopicId = (topicId) => {
-    fetch(`http://localhost:8001/api/topics/photos/${topicId}`)
+    fetch(`https://photolabs-deployed.onrender.com/api/topics/photos/${topicId}`)
       .then(response => response.json())
       .then(data => {
         // Dispatch action to update photos based on topic ID
