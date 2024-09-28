@@ -31,7 +31,12 @@ function read(file) {
 module.exports = function application(
   ENV,
 ) {
-  app.use(cors());
+  app.use(cors({
+    origin: 'https://photolabs-deployed.onrender.com', // Specify your frontend URL
+    methods: 'GET,POST,PUT,DELETE', // Allow necessary HTTP methods
+    credentials: true, // Allow credentials if needed (e.g., cookies or authentication)
+    allowedHeaders: 'Content-Type,Authorization', // Specify necessary headers
+  }));
   app.use(helmet());
   app.use(bodyparser.json());
   app.use(express.static(path.join(__dirname, 'public')));
