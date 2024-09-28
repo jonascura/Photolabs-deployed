@@ -39,7 +39,7 @@ module.exports = function application(
   app.use("/api", photos(db));
   app.use("/api", topics(db));
 
-  if (ENV === "development" || ENV === "test") {
+  if (ENV === "development" || ENV === "test"  || ENV === "production") {
     Promise.all([
       read(path.resolve(__dirname, `db/schema/create.sql`)),
       read(path.resolve(__dirname, `db/schema/${ENV}.sql`))
