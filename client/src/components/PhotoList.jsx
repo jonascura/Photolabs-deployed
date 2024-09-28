@@ -13,7 +13,7 @@ const PhotoList = ({ photos, updateToFavPhotoIds, favoritePhotos, openModal, rea
   }
 
   return (
-    <ul className="photo-list">
+    <ul className="photo-list" class="lazy">
       {photos.map(photo => (
         <PhotoListItem key={photo.id} photo={photo} updateToFavPhotoIds={updateToFavPhotoIds} favoritePhotos={favoritePhotos} openModal={openModal} />
       ))}
