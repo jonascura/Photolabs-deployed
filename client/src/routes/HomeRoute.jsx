@@ -1,25 +1,18 @@
-import React from 'react';
-import useApplicationData from 'hooks/useApplicationData';
+import React, { useState } from 'react';
 
 import '../styles/HomeRoute.scss';
 import PhotoList from '../components/PhotoList';
 import TopNavigationBar from '../components/TopNavigationBar';
 
-const HomeRoute = ({ openModal, updateToFavPhotoIds, favoritePhotos, getPhotosByTopicId }) => {
-  const { state, loadMorePhotos } = useApplicationData();
-  const { photos, topics, totalPhotos } = state;
+const HomeRoute = ({ photos, topics, openModal, updateToFavPhotoIds, favoritePhotos, getPhotosByTopicId }) => {
+
+  // console.log("from home", getPhotosByTopicId)
 
   return (
     <div className="home-route">
+      {/* Insert React */}
       <TopNavigationBar topics={topics} updateToFavPhotoIds={updateToFavPhotoIds} favoritePhotos={favoritePhotos} getPhotosByTopicId={getPhotosByTopicId} />
-      <PhotoList 
-        photos={photos} 
-        loadMorePhotos={loadMorePhotos} 
-        totalPhotos={totalPhotos}
-        updateToFavPhotoIds={updateToFavPhotoIds} 
-        favoritePhotos={favoritePhotos} 
-        openModal={openModal} 
-      />
+      <PhotoList photos={photos} updateToFavPhotoIds={updateToFavPhotoIds} favoritePhotos={favoritePhotos} openModal={openModal} />
     </div>
   );
 };

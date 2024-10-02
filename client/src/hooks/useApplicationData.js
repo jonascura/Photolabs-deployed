@@ -3,11 +3,9 @@ import { useReducer, useEffect } from 'react';
 const initialState = {
   selectedPhoto: null,
   favoritePhotos: [],
-  modal: false,
+  modal:false,
   photos: [],
-  topics: [],
-  currentPage: 1,
-  totalPhotos: 0,
+  topics: []
 };
 
 const reducer = (state, action) => {
@@ -16,90 +14,66 @@ const reducer = (state, action) => {
       return {
         ...state,
         selectedPhoto: action.payload,
-        modal: true,
+        modal: true
       };
     case 'TOGGLE_FAVORITE':
       const isPhotoInFavorites = state.favoritePhotos.includes(action.payload);
       return {
         ...state,
         favoritePhotos: isPhotoInFavorites
-          ? state.favoritePhotos.filter((id) => id !== action.payload)
-          : [...state.favoritePhotos, action.payload],
+          ? state.favoritePhotos.filter(id => id !== action.payload)
+          : [...state.favoritePhotos, action.payload]
       };
     case 'CLOSE_MODAL':
       return {
         ...state,
         selectedPhoto: null,
-        modal: false,
+        modal: false
       };
     case 'SET_PHOTOS':
       return {
         ...state,
-        photos: action.append ? [...state.photos, ...action.payload] : action.payload,
+        photos: action.payload
       };
     case 'SET_TOPICS':
       return {
         ...state,
-        topics: action.payload,
-      };
-    case 'SET_CURRENT_PAGE':
-      return {
-        ...state,
-        currentPage: action.payload,
+        topics: action.payload
       };
     default:
       return state;
   }
 };
 
+
 const useApplicationData = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
+  // olde endpoint "http://localhost:8001..."
   useEffect(() => {
-    // Fetch initial photos data
-    fetchPhotos(state.currentPage);
+    // Fetch photos data
+    fetch('https://photolabs-deployed-ygl5.onrender.com/api/photos', {mode: 'cors'})
+      .then(response => response.json())
+      .then(data => dispatch({ type: 'SET_PHOTOS', payload: data }))
+      .catch(error => console.error('Error fetching photos:', error));
 
     // Fetch topics data
-    fetch('https://photolabs-deployed-ygl5.onrender.com/api/topics')
-      .then((response) => {
-        if (!response.ok) throw new Error('Network response was not ok');
-        return response.json();
-      })
-      .then((data) => dispatch({ type: 'SET_TOPICS', payload: data }))
-      .catch((error) => console.error('Error fetching topics:', error));
+    fetch('https://photolabs-deployed-ygl5.onrender.com/api/topics', {mode: 'cors'})
+      .then(response => response.json())
+      .then(data => dispatch({ type: 'SET_TOPICS', payload: data }))
+      .catch(error => console.error('Error fetching topics:', error));
   }, []); // Empty dependency array ensures useEffect runs once after initial render
 
-  const fetchPhotos = (page, append = false) => {
-    fetch(`https://photolabs-deployed-ygl5.onrender.com/api/photos?page=${page}&limit=6`)
-      .then((response) => {
-        if (!response.ok) throw new Error('Network response was not ok');
-        return response.json();
-      })
-      .then((data) => {
-        if (Array.isArray(data)) {
-          dispatch({ type: 'SET_PHOTOS', payload: data, append });
-        } else {
-          console.error('Fetched data is not an array', data);
-        }
-      })
-      .catch((error) => console.error('Error fetching photos:', error));
-  };
-
-  // Fetch photos based on topic ID
+  
+  // Function to fetch photos by topic ID
   const getPhotosByTopicId = (topicId) => {
-    fetch(`https://photolabs-deployed-ygl5.onrender.com/api/topics/photos/${topicId}`)
-      .then((response) => response.json())
-      .then((data) => {
+    fetch(`https://photolabs-deployed-ygl5.onrender.com/api/topics/photos/${topicId}`, {mode: 'cors'})
+      .then(response => response.json())
+      .then(data => {
+        // Dispatch action to update photos based on topic ID
         dispatch({ type: 'SET_PHOTOS', payload: data });
       })
-      .catch((error) => console.error(`Error fetching photos for topic ID ${topicId}:`, error));
-  };
-
-  // When loading more photos, ensure you append them
-  const loadMorePhotos = () => {
-    const nextPage = state.currentPage + 1;
-    dispatch({ type: 'SET_CURRENT_PAGE', payload: nextPage });
-    fetchPhotos(nextPage, true); // Append more photos instead of overwriting
+      .catch(error => console.error(`Error fetching photos for topic ID ${topicId}:`, error));
   };
 
   const onPhotoSelect = (photo) => {
@@ -116,11 +90,10 @@ const useApplicationData = () => {
 
   return {
     state,
-    loadMorePhotos,
     onPhotoSelect,
     updateToFavPhotoIds,
     onClosePhotoDetailsModal,
-    getPhotosByTopicId,
+    getPhotosByTopicId
   };
 };
 
