@@ -8,20 +8,6 @@ const initialState = {
   topics: [],
 };
 
-const formatPhotos = (photos) => {
-  return photos.map(photo => ({
-    ...photo,
-    urls: {
-      full: `https://photolabs-deployed-ygl5.onrender.com/images/${photo.urls.full.split('/').pop()}`,
-      regular: `https://photolabs-deployed-ygl5.onrender.com/images/${photo.urls.regular.split('/').pop()}`
-    },
-    user: {
-      ...photo.user,
-      profile: `https://photolabs-deployed-ygl5.onrender.com/images/${photo.user.profile.split('/').pop()}`
-    }
-  }));
-};
-
 const reducer = (state, action) => {
   switch (action.type) {
     case 'SELECT_PHOTO':
@@ -44,11 +30,32 @@ const reducer = (state, action) => {
         selectedPhoto: null,
         modal: false
       };
-    case 'SET_PHOTOS':
-      return {
-        ...state,
-        photos: formatPhotos(action.payload)
-      };
+      case 'SET_PHOTOS':
+        return {
+          ...state,
+          photos: action.payload.map(photo => ({
+            ...photo,
+            urls: {
+              full: `https://photolabs-deployed-ygl5.onrender.com/images/${photo.urls.full.split('/').pop()}`,
+              regular: `https://photolabs-deployed-ygl5.onrender.com/images/${photo.urls.regular.split('/').pop()}`
+            },
+            user: {
+              ...photo.user,
+              profile: `https://photolabs-deployed-ygl5.onrender.com/images/${photo.user.profile.split('/').pop()}`
+            },
+            similar_photos: photo.similar_photos.map(similarPhoto => ({
+              ...similarPhoto,
+              urls: {
+                full: `https://photolabs-deployed-ygl5.onrender.com/images/${similarPhoto.urls.full.split('/').pop()}`,
+                regular: `https://photolabs-deployed-ygl5.onrender.com/images/${similarPhoto.urls.regular.split('/').pop()}`
+              },
+              user: {
+                ...similarPhoto.user,
+                profile: `https://photolabs-deployed-ygl5.onrender.com/images/${similarPhoto.user.profile.split('/').pop()}`
+              }
+            }))
+          }))
+        };
     case 'SET_TOPICS':
       return {
         ...state,

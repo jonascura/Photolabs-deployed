@@ -7,23 +7,10 @@ import closeSymbol from '../assets/closeSymbol.svg';
 import PhotoFavButton from 'components/PhotoFavButton';
 import PhotoList from 'components/PhotoList';
 
-const formatPhoto = (photo) => ({
-  ...photo,
-  urls: {
-    full: `https://photolabs-deployed-ygl5.onrender.com/images/${photo.urls.full.split('/').pop()}`,
-    regular: `https://photolabs-deployed-ygl5.onrender.com/images/${photo.urls.regular.split('/').pop()}`
-  },
-  user: {
-    ...photo.user,
-    profile: `https://photolabs-deployed-ygl5.onrender.com/images/${photo.user.profile.split('/').pop()}`
-  }
-});
-
-const PhotoDetailsModal = ({ photos, closeModal, photo, favoritePhotos, updateToFavPhotoIds, openModal, onPhotoSelect }) => {
+const PhotoDetailsModal = ({ photos, closeModal, photo, favoritePhotos, updateToFavPhotoIds, openModal}) => {
 
   const { id, location, urls, user, similar_photos } = photo;
   console.log("inside modal", photo, photos);
-  const formattedSimilarPhotos = similar_photos.map(formatPhoto);
 
   return (
     <div className="photo-details-modal">
@@ -49,7 +36,7 @@ const PhotoDetailsModal = ({ photos, closeModal, photo, favoritePhotos, updateTo
       
         {/* Similar Photos */}
         <ul className="photo-list">
-          <PhotoList photos={formattedSimilarPhotos} updateToFavPhotoIds={updateToFavPhotoIds} favoritePhotos={favoritePhotos} openModal={openModal} realPhotos={photos} clickedPhoto={photo} onPhotoClick={onPhotoSelect} />
+          <PhotoList photos={similar_photos} updateToFavPhotoIds={updateToFavPhotoIds} favoritePhotos={favoritePhotos} openModal={openModal} realPhotos={photos} clickedPhoto={photo} />
         </ul>
 
       </div>
