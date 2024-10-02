@@ -2,8 +2,12 @@ const router = require("express").Router();
 
 module.exports = db => {
   router.get("/photos", (request, response) => {
+    // Destructure page and limit from query parameters
     const { page = 1, limit = 10 } = request.query;
-    const offset = (page - 1) * limit;
+    // Convert limit and page to numbers for pagination
+    const numericLimit = Number(limit);
+    const offset = (Number(page) - 1) * numericLimit;
+
     const protocol = request.protocol;
     const host = request.hostname;
     const port = process.env.PORT || 8001;
@@ -11,19 +15,20 @@ module.exports = db => {
     
     console.log(`Fetching photos: page=${page}, limit=${limit}, offset=${offset}`);
 
+    // Query the database
     db.query(
       `
       SELECT json_agg(
         json_build_object(
           'id', photo.id,
           'urls', json_build_object(
-            'full', concat($1, '/images/', photo.full_url),
-            'regular', concat($1, '/images/', photo.regular_url)
+            'full', concat($1::text, '/images/', photo.full_url),
+            'regular', concat($1::text, '/images/', photo.regular_url)
           ),
           'user', json_build_object(
             'username', user_account.username,
             'name', user_account.fullname,
-            'profile', concat($1, '/images/', user_account.profile_url)
+            'profile', concat($1::text, '/images/', user_account.profile_url)
           ),
           'location', json_build_object(
             'city', photo.city,
@@ -34,13 +39,13 @@ module.exports = db => {
               json_build_object(
                 'id', similar_photo.id,
                 'urls', json_build_object(
-                  'full', concat($1, '/images/', similar_photo.full_url),
-                  'regular', concat($1, '/images/', similar_photo.regular_url)
+                  'full', concat($1::text, '/images/', similar_photo.full_url),
+                  'regular', concat($1::text, '/images/', similar_photo.regular_url)
                 ),
                 'user', json_build_object(
                   'username', similar_user_account.username,
                   'name', similar_user_account.fullname,
-                  'profile', concat($1, '/images/', similar_user_account.profile_url)
+                  'profile', concat($1::text, '/images/', similar_user_account.profile_url)
                 ),
                 'location', json_build_object(
                   'city', similar_photo.city,
@@ -60,7 +65,7 @@ module.exports = db => {
       JOIN user_account ON user_account.id = photo.user_id
       LIMIT $2 OFFSET $3;
       `,
-      [serverUrl, limit, offset]
+      [serverUrl, numericLimit, offset] // Use numericLimit and offset
     )
       .then(({ rows }) => {
         response.json(rows[0].photo_data);
