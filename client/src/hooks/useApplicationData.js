@@ -32,11 +32,11 @@ const reducer = (state, action) => {
         selectedPhoto: null,
         modal: false,
       };
-      case 'SET_PHOTOS':
-        return {
-          ...state,
-          photos: action.append ? [...state.photos, ...action.payload] : action.payload,
-        };
+    case 'SET_PHOTOS':
+      return {
+        ...state,
+        photos: action.append ? [...state.photos, ...action.payload] : action.payload,
+      };
     case 'SET_TOPICS':
       return {
         ...state,
@@ -58,7 +58,7 @@ const useApplicationData = () => {
   useEffect(() => {
     // Fetch initial photos data
     fetchPhotos(state.currentPage);
-    
+
     // Fetch topics data
     fetch('https://photolabs-deployed-ygl5.onrender.com/api/topics')
       .then((response) => {
@@ -71,20 +71,30 @@ const useApplicationData = () => {
 
   const fetchPhotos = (page, append = false) => {
     fetch(`https://photolabs-deployed-ygl5.onrender.com/api/photos?page=${page}&limit=6`)
-      .then(response => {
+      .then((response) => {
         if (!response.ok) throw new Error('Network response was not ok');
         return response.json();
       })
-      .then(data => {
+      .then((data) => {
         if (Array.isArray(data)) {
           dispatch({ type: 'SET_PHOTOS', payload: data, append });
         } else {
           console.error('Fetched data is not an array', data);
         }
       })
-      .catch(error => console.error('Error fetching photos:', error));
+      .catch((error) => console.error('Error fetching photos:', error));
   };
-  
+
+  // Fetch photos based on topic ID
+  const getPhotosByTopicId = (topicId) => {
+    fetch(`https://photolabs-deployed-ygl5.onrender.com/api/topics/photos/${topicId}`)
+      .then((response) => response.json())
+      .then((data) => {
+        dispatch({ type: 'SET_PHOTOS', payload: data });
+      })
+      .catch((error) => console.error(`Error fetching photos for topic ID ${topicId}:`, error));
+  };
+
   // When loading more photos, ensure you append them
   const loadMorePhotos = () => {
     const nextPage = state.currentPage + 1;
@@ -110,6 +120,7 @@ const useApplicationData = () => {
     onPhotoSelect,
     updateToFavPhotoIds,
     onClosePhotoDetailsModal,
+    getPhotosByTopicId,
   };
 };
 
