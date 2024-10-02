@@ -35,7 +35,7 @@ const reducer = (state, action) => {
     case 'SET_PHOTOS':
       return {
         ...state,
-        photos: [...state.photos, ...action.payload], // Append new photos
+        photos: [...state.photos, ...action.payload],
       };
     case 'SET_TOPICS':
       return {
@@ -68,8 +68,17 @@ const useApplicationData = () => {
 
   const fetchPhotos = (page) => {
     fetch(`https://photolabs-deployed-ygl5.onrender.com/api/photos?page=${page}&limit=9`, { mode: 'cors' })
-      .then((response) => response.json())
-      .then((data) => dispatch({ type: 'SET_PHOTOS', payload: data }))
+      .then((response) => {
+        if (!response.ok) throw new Error('Network response was not ok');
+        return response.json();
+      })
+      .then((data) => {
+        if (Array.isArray(data)) {
+          dispatch({ type: 'SET_PHOTOS', payload: data });
+        } else {
+          console.error('Fetched data is not an array', data);
+        }
+      })
       .catch((error) => console.error('Error fetching photos:', error));
   };
 
@@ -93,7 +102,7 @@ const useApplicationData = () => {
 
   return {
     state,
-    loadMorePhotos, // Provide loadMorePhotos function to be called in PhotoList
+    loadMorePhotos,
     onPhotoSelect,
     updateToFavPhotoIds,
     onClosePhotoDetailsModal,
