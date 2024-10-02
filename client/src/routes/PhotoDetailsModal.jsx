@@ -12,8 +12,8 @@ const PhotoDetailsModal = ({ photos, closeModal, photo, favoritePhotos, updateTo
   const { id, location, urls, user, similar_photos } = photo;
   console.log("inside modal", photo, photos);
 
-  // Format similar photos to ensure they have correct URLs
-  const formattedSimilarPhotos = similar_photos.map(similarPhoto => ({
+  // Check if similar_photos is defined and is an array, default to an empty array otherwise
+  const formattedSimilarPhotos = Array.isArray(similar_photos) ? similar_photos.map(similarPhoto => ({
     ...similarPhoto,
     urls: {
       full: `https://photolabs-deployed-ygl5.onrender.com/images/${similarPhoto.urls.full.split('/').pop()}`,
@@ -23,7 +23,7 @@ const PhotoDetailsModal = ({ photos, closeModal, photo, favoritePhotos, updateTo
       ...similarPhoto.user,
       profile: `https://photolabs-deployed-ygl5.onrender.com/images/${similarPhoto.user.profile.split('/').pop()}`
     }
-  }));
+  })) : [];
 
   return (
     <div className="photo-details-modal">
