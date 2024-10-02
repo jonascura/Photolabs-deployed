@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import useApplicationData from '../path/to/useApplicationData';
 
 import '../styles/HomeRoute.scss';
 import PhotoList from '../components/PhotoList';
