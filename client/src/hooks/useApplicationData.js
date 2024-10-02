@@ -60,14 +60,14 @@ const useApplicationData = () => {
     fetchPhotos(state.currentPage);
     
     // Fetch topics data
-    fetch('https://photolabs-deployed-ygl5.onrender.com/api/topics', { mode: 'cors' })
+    fetch('https://photolabs-deployed-ygl5.onrender.com/api/topics', { mode: 'no-cors' })
       .then((response) => response.json())
       .then((data) => dispatch({ type: 'SET_TOPICS', payload: data }))
       .catch((error) => console.error('Error fetching topics:', error));
   }, []); // Empty dependency array ensures useEffect runs once after initial render
 
   const fetchPhotos = (page) => {
-    fetch(`https://photolabs-deployed-ygl5.onrender.com/api/photos?page=${page}&limit=9`, { mode: 'cors' })
+    fetch(`https://photolabs-deployed-ygl5.onrender.com/api/photos?page=${page}&limit=9`, { mode: 'no-cors' })
       .then((response) => {
         if (!response.ok) throw new Error('Network response was not ok');
         return response.json();
