@@ -34,7 +34,7 @@ const PhotoList = ({ photos, updateToFavPhotoIds, favoritePhotos, openModal, rea
       endMessage={<p>No more photos</p>}
     >
     <ul className="photo-list">
-      {photos.map(photo => (
+      {displayedPhotos.map(photo => (
         <PhotoListItem key={photo.id} photo={photo} updateToFavPhotoIds={updateToFavPhotoIds} favoritePhotos={favoritePhotos} openModal={openModal} />
       ))}
     </ul>
