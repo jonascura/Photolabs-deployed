@@ -112,7 +112,6 @@ const useApplicationData = () => {
     updateToFavPhotoIds,
     onClosePhotoDetailsModal,
     getPhotosByTopicId,
-    fetchAllPhotos
   };
 };
 
