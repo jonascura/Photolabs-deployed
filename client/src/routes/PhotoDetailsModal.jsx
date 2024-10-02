@@ -1,5 +1,4 @@
 import React, { useEffect, useRef } from 'react';
-
 import '../styles/PhotoDetailsModal.scss';
 import "../styles/PhotoList.scss";
 import "../styles/PhotoListItem.scss";
@@ -43,7 +42,14 @@ const PhotoDetailsModal = ({ photos, closeModal, photo, favoritePhotos, updateTo
       <div 
         ref={modalRef}
         className="photo-details-modal"
-        style={{ top: `${clickedPosition.y}px`, left: `${clickedPosition.x}px`, transform: 'translate(-50%, -50%)' }} // Dynamically set position
+        style={{ 
+          top: `${clickedPosition.y}px`, 
+          left: `${clickedPosition.x}px`, 
+          transform: 'translate(-50%, -50%)',
+          maxWidth: '90%', // Prevent overflow
+          maxHeight: '90vh', // Limit height
+          overflow: 'auto' // Allow scrolling if needed
+        }} 
       >
         <button className="photo-details-modal__close-button" onClick={closeModal}>
           <img src={closeSymbol} alt="close symbol" />
