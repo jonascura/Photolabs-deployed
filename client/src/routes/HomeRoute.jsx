@@ -5,7 +5,7 @@ import '../styles/HomeRoute.scss';
 import PhotoList from '../components/PhotoList';
 import TopNavigationBar from '../components/TopNavigationBar';
 
-const HomeRoute = ({ photos, topics, openModal, updateToFavPhotoIds, favoritePhotos, getPhotosByTopicId }) => {
+const HomeRoute = ({ openModal, updateToFavPhotoIds, favoritePhotos, getPhotosByTopicId }) => {
   const { state, loadMorePhotos } = useApplicationData();
   const { photos, topics, totalPhotos } = state;
 
