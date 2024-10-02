@@ -7,9 +7,14 @@ const PhotoList = ({ photos, updateToFavPhotoIds, favoritePhotos, openModal, rea
   // console.log("inside Photolist", photos);
 
   // handle photos passed in from modal
-  if (!photos) {
-    photos=realPhotos.find(photo => photo.id === clickedPhoto.id).similar_photos;
-    // console.log("inside Photolist function", clickedPhoto, photos);
+  if (!photos && clickedPhoto) {
+    const foundPhoto = realPhotos.find(photo => photo.id === clickedPhoto.id);
+    if (foundPhoto && foundPhoto.similar_photos) {
+      photos = foundPhoto.similar_photos;
+    } else {
+      // If no similar photos are found, set photos to an empty array to avoid errors
+      photos = [];
+    }
   }
 
   return (
