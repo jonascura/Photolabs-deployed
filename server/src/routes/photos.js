@@ -1,7 +1,9 @@
-
 const router = require("express").Router();
+const sharp = require("sharp");
+const fs = require("fs");
+const path = require("path");
 
-module.exports = db => {
+module.exports = (db) => {
   router.get("/photos", (request, response) => {
     const protocol = request.protocol;
     const host = request.hostname;
@@ -57,8 +59,30 @@ module.exports = db => {
       FROM photo
       JOIN user_account ON user_account.id = photo.user_id;
     `).then(({ rows }) => {
+      response.set('Cache-Control', 'public, max-age=31536000'); // Cache for 1 year
       response.json(rows[0].photo_data);
     });
+  });
+
+  // New route to serve optimized images
+  router.get("/images/:imageName", async (request, response) => {
+    const { imageName } = request.params;
+    const imagePath = path.join(__dirname, '../public/images', imageName);
+
+    try {
+      // Read image file and process it with sharp
+      const optimizedImage = await sharp(imagePath)
+        .resize({ width: 800, height: 600, fit: 'inside' }) // Resize image to fit
+        .jpeg({ quality: 80 }) // Set quality
+        .toBuffer();
+
+      response.set('Cache-Control', 'public, max-age=31536000'); // Cache for 1 year
+      response.contentType('image/jpeg');
+      response.send(optimizedImage);
+    } catch (error) {
+      console.error('Error processing image:', error);
+      response.status(404).send('Image not found');
+    }
   });
 
   return router;
