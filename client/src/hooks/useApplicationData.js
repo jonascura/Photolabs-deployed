@@ -50,7 +50,7 @@ const useApplicationData = () => {
 
   useEffect(() => {
     // Fetch photos data
-    fetch('https://photolabs-deployed.onrender.com/api/photos?page=1&limit=9', { mode: 'cors' })
+    fetch('https://photolabs-deployed-ygl5.onrender.com/api/photos?page=1&limit=9', { mode: 'cors' })
       .then(response => {
         if (!response.ok) {
           throw new Error(`Error fetching photos: ${response.statusText}`);
@@ -61,7 +61,7 @@ const useApplicationData = () => {
       .catch(error => console.error('Error fetching photos:', error));
 
     // Fetch topics data
-    fetch('https://photolabs-deployed.onrender.com/api/topics', { mode: 'cors' })
+    fetch('https://photolabs-deployed-ygl5.onrender.com/api/topics', { mode: 'cors' })
       .then(response => {
         if (!response.ok) {
           throw new Error(`Error fetching topics: ${response.statusText}`);
@@ -74,7 +74,7 @@ const useApplicationData = () => {
 
   // Function to fetch photos by topic ID
   const getPhotosByTopicId = (topicId) => {
-    fetch(`https://photolabs-deployed.onrender.com/api/topics/photos/${topicId}`, { mode: 'cors' })
+    fetch(`https://photolabs-deployed-ygl5.onrender.com/api/topics/photos/${topicId}`, { mode: 'cors' })
       .then(response => {
         if (!response.ok) {
           throw new Error(`Error fetching photos for topic ID ${topicId}: ${response.statusText}`);
