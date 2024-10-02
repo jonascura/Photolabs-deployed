@@ -9,7 +9,7 @@ const TopNavigation = ({ topics, favoritePhotos, getPhotosByTopicId, fetchAllPho
 
   return (
     <div className="top-nav-bar">
-      <span className="top-nav-bar__logo" onClick={handleLogoClick} >PhotoLabs</span>
+      <span className="top-nav-bar__logo" onClick={getPhotosByTopicId("")} >PhotoLabs</span>
       <TopicList topics={topics} getPhotosByTopicId={getPhotosByTopicId} />
       <FavBadge favoritePhotos={favoritePhotos} />
     </div>
