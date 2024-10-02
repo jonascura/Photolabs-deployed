@@ -7,7 +7,7 @@ const initialState = {
   photos: [],
   topics: [],
   currentPage: 1,
-  totalPhotos: 0, // to track total number of photos if needed
+  totalPhotos: 0,
 };
 
 const reducer = (state, action) => {
@@ -60,14 +60,17 @@ const useApplicationData = () => {
     fetchPhotos(state.currentPage);
     
     // Fetch topics data
-    fetch('https://photolabs-deployed-ygl5.onrender.com/api/topics', { mode: 'no-cors' })
-      .then((response) => response.json())
+    fetch('https://photolabs-deployed-ygl5.onrender.com/api/topics')
+      .then((response) => {
+        if (!response.ok) throw new Error('Network response was not ok');
+        return response.json();
+      })
       .then((data) => dispatch({ type: 'SET_TOPICS', payload: data }))
       .catch((error) => console.error('Error fetching topics:', error));
   }, []); // Empty dependency array ensures useEffect runs once after initial render
 
   const fetchPhotos = (page) => {
-    fetch(`https://photolabs-deployed-ygl5.onrender.com/api/photos?page=${page}&limit=9`, { mode: 'no-cors' })
+    fetch(`https://photolabs-deployed-ygl5.onrender.com/api/photos?page=${page}&limit=9`)
       .then((response) => {
         if (!response.ok) throw new Error('Network response was not ok');
         return response.json();
