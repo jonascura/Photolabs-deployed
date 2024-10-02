@@ -19,7 +19,7 @@ const formatPhoto = (photo) => ({
   }
 });
 
-const PhotoDetailsModal = ({ photos, closeModal, photo, favoritePhotos, updateToFavPhotoIds, openModal}) => {
+const PhotoDetailsModal = ({ photos, closeModal, photo, favoritePhotos, updateToFavPhotoIds, openModal, onPhotoSelect }) => {
 
   const { id, location, urls, user, similar_photos } = photo;
   console.log("inside modal", photo, photos);
@@ -49,7 +49,7 @@ const PhotoDetailsModal = ({ photos, closeModal, photo, favoritePhotos, updateTo
       
         {/* Similar Photos */}
         <ul className="photo-list">
-          <PhotoList photos={formattedSimilarPhotos} updateToFavPhotoIds={updateToFavPhotoIds} favoritePhotos={favoritePhotos} openModal={openModal} realPhotos={photos} clickedPhoto={photo} />
+          <PhotoList photos={formattedSimilarPhotos} updateToFavPhotoIds={updateToFavPhotoIds} favoritePhotos={favoritePhotos} openModal={openModal} realPhotos={photos} clickedPhoto={photo} onPhotoClick={onPhotoSelect} />
         </ul>
 
       </div>

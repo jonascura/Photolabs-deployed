@@ -3,7 +3,7 @@ import React from "react";
 import PhotoListItem from "./PhotoListItem";
 import "../styles/PhotoList.scss";
 
-const PhotoList = ({ photos, updateToFavPhotoIds, favoritePhotos, openModal, realPhotos, clickedPhoto }) => {
+const PhotoList = ({ photos, updateToFavPhotoIds, favoritePhotos, openModal, realPhotos, clickedPhoto, onPhotoClick }) => {
   // console.log("inside Photolist", photos);
 
   // handle photos passed in from modal
@@ -15,7 +15,7 @@ const PhotoList = ({ photos, updateToFavPhotoIds, favoritePhotos, openModal, rea
   return (
     <ul className="photo-list">
       {photos.map(photo => (
-        <PhotoListItem key={photo.id} photo={photo} updateToFavPhotoIds={updateToFavPhotoIds} favoritePhotos={favoritePhotos} openModal={openModal} />
+        <PhotoListItem key={photo.id} photo={photo} updateToFavPhotoIds={updateToFavPhotoIds} favoritePhotos={favoritePhotos} openModal={openModal} onClick={() => onPhotoClick(photo)} />
       ))}
     </ul>
   );
