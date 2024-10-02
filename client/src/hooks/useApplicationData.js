@@ -13,7 +13,20 @@ const reducer = (state, action) => {
     case 'SELECT_PHOTO':
       return {
         ...state,
-        selectedPhoto: action.payload,
+        selectedPhoto: {
+          ...action.payload,
+          similar_photos: action.payload.similar_photos.map(similarPhoto => ({
+            ...similarPhoto,
+            urls: {
+              full: `https://photolabs-deployed-ygl5.onrender.com/images/${similarPhoto.urls.full.split('/').pop()}`,
+              regular: `https://photolabs-deployed-ygl5.onrender.com/images/${similarPhoto.urls.regular.split('/').pop()}`
+            },
+            user: {
+              ...similarPhoto.user,
+              profile: `https://photolabs-deployed-ygl5.onrender.com/images/${similarPhoto.user.profile.split('/').pop()}`
+            }
+          }))
+        },
         modal: true
       };
     case 'TOGGLE_FAVORITE':
