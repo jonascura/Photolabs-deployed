@@ -30,11 +30,22 @@ const reducer = (state, action) => {
         selectedPhoto: null,
         modal: false
       };
-    case 'SET_PHOTOS':
-      return {
-        ...state,
-        photos: action.payload
-      };
+      case 'SET_PHOTOS':
+        return {
+          ...state,
+          photos: action.payload.map(photo => ({
+            ...photo,
+            urls: {
+              full: `https://photolabs-deployed-ygl5.onrender.com/images/${photo.urls.full.split('/').pop()}`,
+              regular: `https://photolabs-deployed-ygl5.onrender.com/images/${photo.urls.regular.split('/').pop()}`
+            },
+            user: {
+              ...photo.user,
+              profile: `https://photolabs-deployed-ygl5.onrender.com/images/${photo.user.profile.split('/').pop()}`
+            }
+          }))
+        };
+      
     case 'SET_TOPICS':
       return {
         ...state,
