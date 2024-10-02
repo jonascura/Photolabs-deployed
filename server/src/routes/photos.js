@@ -8,6 +8,8 @@ module.exports = db => {
     const host = request.hostname;
     const port = process.env.PORT || 8001;
     const serverUrl = `${protocol}://${host}:${port}`;
+    
+    console.log(`Fetching photos: page=${page}, limit=${limit}, offset=${offset}`);
 
     db.query(
       `
@@ -60,17 +62,13 @@ module.exports = db => {
       `,
       [serverUrl, limit, offset]
     )
-    .then(({ rows }) => {
-      if (rows.length > 0) {
+      .then(({ rows }) => {
         response.json(rows[0].photo_data);
-      } else {
-        response.status(404).json({ error: 'No photos found' });
-      }
-    })
-    .catch(error => {
-      console.error("Error fetching photos:", error);
-      response.status(500).json({ error: "Error fetching photos" });
-    });
+      })
+      .catch(error => {
+        console.error("Error fetching photos:", error);
+        response.status(500).json({ error: "Error fetching photos" });
+      });
   });
 
   return router;
