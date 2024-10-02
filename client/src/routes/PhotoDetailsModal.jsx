@@ -9,6 +9,7 @@ import PhotoList from 'components/PhotoList';
 const PhotoDetailsModal = ({ photos, closeModal, photo, favoritePhotos, updateToFavPhotoIds, openModal, clickedPosition }) => {
   const { id, location, urls, user, similar_photos } = photo;
   const modalRef = useRef(null);
+  const { x = 0, y = 0 } = clickedPosition || { x: 0, y: 0 };
 
   // Formatting similar photos URLs
   const formattedSimilarPhotos = similar_photos.map(similarPhoto => ({
