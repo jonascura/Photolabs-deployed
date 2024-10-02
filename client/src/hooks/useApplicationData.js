@@ -5,7 +5,9 @@ const initialState = {
   favoritePhotos: [],
   modal: false,
   photos: [],
-  topics: []
+  topics: [],
+  currentPage: 1,
+  totalPhotos: 0, // to track total number of photos if needed
 };
 
 const reducer = (state, action) => {
@@ -14,31 +16,36 @@ const reducer = (state, action) => {
       return {
         ...state,
         selectedPhoto: action.payload,
-        modal: true
+        modal: true,
       };
     case 'TOGGLE_FAVORITE':
       const isPhotoInFavorites = state.favoritePhotos.includes(action.payload);
       return {
         ...state,
         favoritePhotos: isPhotoInFavorites
-          ? state.favoritePhotos.filter(id => id !== action.payload)
-          : [...state.favoritePhotos, action.payload]
+          ? state.favoritePhotos.filter((id) => id !== action.payload)
+          : [...state.favoritePhotos, action.payload],
       };
     case 'CLOSE_MODAL':
       return {
         ...state,
         selectedPhoto: null,
-        modal: false
+        modal: false,
       };
     case 'SET_PHOTOS':
       return {
         ...state,
-        photos: action.payload
+        photos: [...state.photos, ...action.payload], // Append new photos
       };
     case 'SET_TOPICS':
       return {
         ...state,
-        topics: action.payload
+        topics: action.payload,
+      };
+    case 'SET_CURRENT_PAGE':
+      return {
+        ...state,
+        currentPage: action.payload,
       };
     default:
       return state;
@@ -49,43 +56,27 @@ const useApplicationData = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
-    // Fetch photos data
-    fetch('https://photolabs-deployed-ygl5.onrender.com/api/photos?page=1&limit=9', { mode: 'cors' })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`Error fetching photos: ${response.statusText}`);
-        }
-        return response.json();
-      })
-      .then(data => dispatch({ type: 'SET_PHOTOS', payload: data }))
-      .catch(error => console.error('Error fetching photos:', error));
-
+    // Fetch initial photos data
+    fetchPhotos(state.currentPage);
+    
     // Fetch topics data
     fetch('https://photolabs-deployed-ygl5.onrender.com/api/topics', { mode: 'cors' })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`Error fetching topics: ${response.statusText}`);
-        }
-        return response.json();
-      })
-      .then(data => dispatch({ type: 'SET_TOPICS', payload: data }))
-      .catch(error => console.error('Error fetching topics:', error));
+      .then((response) => response.json())
+      .then((data) => dispatch({ type: 'SET_TOPICS', payload: data }))
+      .catch((error) => console.error('Error fetching topics:', error));
   }, []); // Empty dependency array ensures useEffect runs once after initial render
 
-  // Function to fetch photos by topic ID
-  const getPhotosByTopicId = (topicId) => {
-    fetch(`https://photolabs-deployed-ygl5.onrender.com/api/topics/photos/${topicId}`, { mode: 'cors' })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`Error fetching photos for topic ID ${topicId}: ${response.statusText}`);
-        }
-        return response.json();
-      })
-      .then(data => {
-        // Dispatch action to update photos based on topic ID
-        dispatch({ type: 'SET_PHOTOS', payload: data });
-      })
-      .catch(error => console.error(`Error fetching photos for topic ID ${topicId}:`, error));
+  const fetchPhotos = (page) => {
+    fetch(`https://photolabs-deployed-ygl5.onrender.com/api/photos?page=${page}&limit=9`, { mode: 'cors' })
+      .then((response) => response.json())
+      .then((data) => dispatch({ type: 'SET_PHOTOS', payload: data }))
+      .catch((error) => console.error('Error fetching photos:', error));
+  };
+
+  const loadMorePhotos = () => {
+    const nextPage = state.currentPage + 1;
+    dispatch({ type: 'SET_CURRENT_PAGE', payload: nextPage });
+    fetchPhotos(nextPage);
   };
 
   const onPhotoSelect = (photo) => {
@@ -102,10 +93,10 @@ const useApplicationData = () => {
 
   return {
     state,
+    loadMorePhotos, // Provide loadMorePhotos function to be called in PhotoList
     onPhotoSelect,
     updateToFavPhotoIds,
     onClosePhotoDetailsModal,
-    getPhotosByTopicId
   };
 };
 
