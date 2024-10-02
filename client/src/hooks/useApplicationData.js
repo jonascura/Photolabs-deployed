@@ -5,7 +5,8 @@ const initialState = {
   favoritePhotos: [],
   modal:false,
   photos: [],
-  topics: []
+  topics: [],
+  clickedPosition: null
 };
 
 const reducer = (state, action) => {
@@ -13,7 +14,8 @@ const reducer = (state, action) => {
     case 'SELECT_PHOTO':
       return {
         ...state,
-        selectedPhoto: action.payload,
+        selectedPhoto: action.payload.photo,
+        clickedPosition: action.payload.position,
         modal: true
       };
     case 'TOGGLE_FAVORITE':
@@ -28,7 +30,8 @@ const reducer = (state, action) => {
       return {
         ...state,
         selectedPhoto: null,
-        modal: false
+        modal: false,
+        clickedPosition: null
       };
       case 'SET_PHOTOS':
         return {
@@ -87,8 +90,8 @@ const useApplicationData = () => {
       .catch(error => console.error(`Error fetching photos for topic ID ${topicId}:`, error));
   };
 
-  const onPhotoSelect = (photo) => {
-    dispatch({ type: 'SELECT_PHOTO', payload: photo });
+  const onPhotoSelect = (photo, clickedPosition) => {
+    dispatch({ type: 'SELECT_PHOTO', payload: { photo, position: clickedPosition } });
   };
 
   const updateToFavPhotoIds = (photoId) => {
