@@ -32,11 +32,11 @@ const reducer = (state, action) => {
         selectedPhoto: null,
         modal: false,
       };
-    case 'SET_PHOTOS':
-      return {
-        ...state,
-        photos: [...state.photos, ...action.payload],
-      };
+      case 'SET_PHOTOS':
+        return {
+          ...state,
+          photos: action.append ? [...state.photos, ...action.payload] : action.payload,
+        };
     case 'SET_TOPICS':
       return {
         ...state,
@@ -69,26 +69,27 @@ const useApplicationData = () => {
       .catch((error) => console.error('Error fetching topics:', error));
   }, []); // Empty dependency array ensures useEffect runs once after initial render
 
-  const fetchPhotos = (page) => {
+  const fetchPhotos = (page, append = false) => {
     fetch(`https://photolabs-deployed-ygl5.onrender.com/api/photos?page=${page}&limit=6`)
-      .then((response) => {
+      .then(response => {
         if (!response.ok) throw new Error('Network response was not ok');
         return response.json();
       })
-      .then((data) => {
+      .then(data => {
         if (Array.isArray(data)) {
-          dispatch({ type: 'SET_PHOTOS', payload: data });
+          dispatch({ type: 'SET_PHOTOS', payload: data, append });
         } else {
           console.error('Fetched data is not an array', data);
         }
       })
-      .catch((error) => console.error('Error fetching photos:', error));
+      .catch(error => console.error('Error fetching photos:', error));
   };
-
+  
+  // When loading more photos, ensure you append them
   const loadMorePhotos = () => {
     const nextPage = state.currentPage + 1;
     dispatch({ type: 'SET_CURRENT_PAGE', payload: nextPage });
-    fetchPhotos(nextPage);
+    fetchPhotos(nextPage, true); // Append more photos instead of overwriting
   };
 
   const onPhotoSelect = (photo) => {
