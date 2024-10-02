@@ -8,20 +8,6 @@ const initialState = {
   topics: [],
 };
 
-const formatPhotos = (photos) => {
-  return photos.map(photo => ({
-    ...photo,
-    urls: {
-      full: `https://photolabs-deployed-ygl5.onrender.com/images/${photo.urls.full.split('/').pop()}`,
-      regular: `https://photolabs-deployed-ygl5.onrender.com/images/${photo.urls.regular.split('/').pop()}`
-    },
-    user: {
-      ...photo.user,
-      profile: `https://photolabs-deployed-ygl5.onrender.com/images/${photo.user.profile.split('/').pop()}`
-    }
-  }));
-};
-
 const reducer = (state, action) => {
   switch (action.type) {
     case 'SELECT_PHOTO':
@@ -47,7 +33,7 @@ const reducer = (state, action) => {
     case 'SET_PHOTOS':
       return {
         ...state,
-        photos: formatPhotos(action.payload)
+        photos: action.payload
       };
     case 'SET_TOPICS':
       return {
@@ -64,7 +50,7 @@ const useApplicationData = () => {
 
   useEffect(() => {
     // Fetch photos data
-    fetch('https://photolabs-deployed-ygl5.onrender.com/api/photos', { mode: 'cors' })
+    fetch('https://photolabs-deployed-ygl5.onrender.com/api/images', { mode: 'cors' })
       .then(response => response.json())
       .then(data => dispatch({ type: 'SET_PHOTOS', payload: data }))
       .catch(error => console.error('Error fetching photos:', error));
@@ -78,7 +64,7 @@ const useApplicationData = () => {
 
   // Function to fetch photos by topic ID
   const getPhotosByTopicId = (topicId) => {
-    fetch(`https://photolabs-deployed-ygl5.onrender.com/api/topics/photos/${topicId}`, { mode: 'cors' })
+    fetch(`https://photolabs-deployed-ygl5.onrender.com/api/topics/images/${topicId}`, { mode: 'cors' })
       .then(response => response.json())
       .then(data => {
         // Dispatch action to update photos based on topic ID
