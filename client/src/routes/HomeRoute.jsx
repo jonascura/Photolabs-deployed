@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import useApplicationData from 'hooks/useApplicationData';
 
 import '../styles/HomeRoute.scss';
@@ -7,7 +7,7 @@ import TopNavigationBar from '../components/TopNavigationBar';
 
 const HomeRoute = ({ openModal, updateToFavPhotoIds, favoritePhotos }) => {
   const { state, loadMorePhotos } = useApplicationData();
-  const { photos, topics } = state;
+  const { photos, topics, totalPhotos } = state;
 
   return (
     <div className="home-route">
@@ -15,6 +15,7 @@ const HomeRoute = ({ openModal, updateToFavPhotoIds, favoritePhotos }) => {
       <PhotoList 
         photos={photos} 
         loadMorePhotos={loadMorePhotos} 
+        totalPhotos={totalPhotos}
         updateToFavPhotoIds={updateToFavPhotoIds} 
         favoritePhotos={favoritePhotos} 
         openModal={openModal} 
