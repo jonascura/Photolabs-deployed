@@ -4,7 +4,7 @@ import '../styles/TopNavigationBar.scss'
 import TopicList from './TopicList';
 import FavBadge from './FavBadge';
 
-const TopNavigation = ({ topics, favoritePhotos, getPhotosByTopicId, fetchAllPhotos }) => {
+const TopNavigation = ({ topics, favoritePhotos, getPhotosByTopicId }) => {
   // console.log("insideTopNavBar", getPhotosByTopicId)
 
   return (

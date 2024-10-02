@@ -94,13 +94,6 @@ const useApplicationData = () => {
       .catch(error => console.error(`Error fetching photos for topic ID ${topicId}:`, error));
   };
 
-  const fetchAllPhotos = () => {
-    fetch('https://photolabs-deployed-ygl5.onrender.com/api/photos', { mode: 'cors' })
-      .then(response => response.json())
-      .then(data => dispatch({ type: 'SET_PHOTOS', payload: data }))
-      .catch(error => console.error('Error fetching photos:', error));
-  };
-
   const onPhotoSelect = (photo) => {
     dispatch({ type: 'SELECT_PHOTO', payload: photo });
   };
