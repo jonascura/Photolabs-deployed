@@ -6,7 +6,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 
 const PhotoList = ({ photos, updateToFavPhotoIds, favoritePhotos, openModal, realPhotos, clickedPhoto }) => {
   // console.log("inside Photolist", photos);
-  const [displayedPhotos, setDisplayedPhotos] = useState(photos.slice(0, 20));
+  const [displayedPhotos, setDisplayedPhotos] = useState(photos.slice(0, 6));
   const [hasMore, setHasMore] = useState(true);
 
   const fetchMorePhotos = () => {
@@ -15,7 +15,7 @@ const PhotoList = ({ photos, updateToFavPhotoIds, favoritePhotos, openModal, rea
       return;
     }
     // load next photo batch
-    setDisplayedPhotos(photos.slice(0, displayedPhotos.length + 20));
+    setDisplayedPhotos(photos.slice(0, displayedPhotos.length + 6));
   }
 
   // handle photos passed in from modal
