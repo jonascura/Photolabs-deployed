@@ -70,7 +70,7 @@ const useApplicationData = () => {
   }, []); // Empty dependency array ensures useEffect runs once after initial render
 
   const fetchPhotos = (page) => {
-    fetch(`https://photolabs-deployed-ygl5.onrender.com/api/photos?page=${page}&limit=9`)
+    fetch(`https://photolabs-deployed-ygl5.onrender.com/api/photos?page=${page}&limit=6`)
       .then((response) => {
         if (!response.ok) throw new Error('Network response was not ok');
         return response.json();
