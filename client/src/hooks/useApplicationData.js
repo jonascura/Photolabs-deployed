@@ -71,13 +71,13 @@ const useApplicationData = () => {
 
   useEffect(() => {
     // Fetch photos data
-    fetch('https://photolabs-deployed-ygl5.onrender.com/api/photos', { mode: 'no-cors' })
+    fetch('https://photolabs-deployed-ygl5.onrender.com/api/photos', { mode: 'cors' })
       .then(response => response.json())
       .then(data => dispatch({ type: 'SET_PHOTOS', payload: data }))
       .catch(error => console.error('Error fetching photos:', error));
 
     // Fetch topics data
-    fetch('https://photolabs-deployed-ygl5.onrender.com/api/topics', { mode: 'no-cors' })
+    fetch('https://photolabs-deployed-ygl5.onrender.com/api/topics', { mode: 'cors' })
       .then(response => response.json())
       .then(data => dispatch({ type: 'SET_TOPICS', payload: data }))
       .catch(error => console.error('Error fetching topics:', error));
@@ -85,7 +85,7 @@ const useApplicationData = () => {
 
   // Function to fetch photos by topic ID
   const getPhotosByTopicId = (topicId) => {
-    fetch(`https://photolabs-deployed-ygl5.onrender.com/api/topics/photos/${topicId}`, { mode: 'no-cors' })
+    fetch(`https://photolabs-deployed-ygl5.onrender.com/api/topics/photos/${topicId}`, { mode: 'cors' })
       .then(response => response.json())
       .then(data => {
         // Dispatch action to update photos based on topic ID
